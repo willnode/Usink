@@ -161,6 +161,11 @@ namespace Usink
             while (i >= max) i -= max;
             return i;
         }
+        
+        static public bool CloseEnough(float value, float target, float radius)
+        {
+            return Mathf.Abs(value - target) < radius;
+        }
 
         static public void GUITint (Color text, Color bg, Action gui)
         {

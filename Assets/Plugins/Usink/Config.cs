@@ -49,5 +49,8 @@ namespace Usink
             public const KeyCode Show = KeyCode.Space;
         }
 
+        [MenuItem("Edit/Usink/Open Scene %o")]
+        public static void DoOpenScene () { Extras.OpenSceneDialog(); }
+        
     }
 }
