@@ -7,12 +7,12 @@ namespace Usink
 {
     public class Tool : Base
     {
-        static View singleton;
+        static public Tool singleton;
 
         [InitializeOnLoadMethod]
         static void WarmUp()
         {
-            Start<View>((x) => singleton = x);
+            Start<Tool>((x) => singleton = x);
         }
 
         protected override void OnEnable()
@@ -27,14 +27,37 @@ namespace Usink
                 RegisterOnSceneGUI(false);
         }
 
+        Vector2 lastDown;
+
         protected override void OnSceneGUI(SceneView view)
         {
             var ev = Event.current;
-            if (ev.type == EventType.KeyDown)
+
+            if (ev.isMouse)
             {
-                
+                if (ev.type == EventType.MouseUp && lastDown == ev.mousePosition)
+                {
+                    Tools.viewTool = ViewTool.None;
+                    Extras.OpenSamplePopup();
+                    ev.Use();
+                }
+                else if (ev.type == EventType.MouseDown)
+                    lastDown = ev.button == 1 ? ev.mousePosition : new Vector2();
+            }
+            if (ev.type == EventType.KeyUp)
+            {
+                switch (ev.keyCode)
+                {
+                    case KeyCode.F2: Extras.OpenRenameDialog(); break;
+                    case KeyCode.L: Extras.OpenSelectLinkedDialog(); break;
+                    case KeyCode.G: Extras.OpenObjectGizmoDialog(); break;
+                    case KeyCode.A: if (Selection.activeGameObject) { lastselect = Selection.instanceIDs; Selection.instanceIDs = new int[0]; } else Selection.instanceIDs = lastselect; break;
+                    case KeyCode.Space: AssetSearcherPopup.Show(ev.mousePosition); break;
+                }
             }
         }
+
+        int[] lastselect = null;
 
         void Rotate(int axis, SceneView view, bool up)
         {

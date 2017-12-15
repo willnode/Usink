@@ -38,7 +38,7 @@ namespace Usink
         }
 
 
-        protected void RegisterOnHieararchyGUI(bool reg)
+        protected void RegisterOnHierarchyGUI(bool reg)
         {
             if (reg)
                 EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyGUI;

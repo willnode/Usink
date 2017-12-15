@@ -8,7 +8,7 @@ namespace Usink
     // ok
     public class View : Base
     {
-        static View singleton;
+        static public View singleton;
 
         [InitializeOnLoadMethod]
         static void WarmUp()

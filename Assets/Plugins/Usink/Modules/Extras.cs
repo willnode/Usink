@@ -61,7 +61,7 @@ namespace Usink
         {
             var TComponents = new HashSet<Type>();
             var objects = Selection.gameObjects;
-           
+
             foreach (var g in objects)
             {
                 TComponents.UnionWith(Array.ConvertAll(g.GetComponents<Component>(), x => x.GetType()));
@@ -148,7 +148,7 @@ namespace Usink
         /// <summary>
         /// Open popup to create game object
         /// </summary>
-        static public void OpenAddGameObjectDialog ()
+        static public void OpenAddGameObjectDialog()
         {
             // hieararchy window is mandatory :(
             var hierarchy = ReflectionUtility.IStaticCall("SceneHierarchyWindow", "get_lastInteractedHierarchyWindow");
@@ -166,26 +166,22 @@ namespace Usink
         /// <summary>
         /// Open popup to pick objects behind
         /// </summary>
-        static public void OpenSamplePopup ()
+        static public void OpenSamplePopup()
         {
-            var gms = new List<GameObject>();
-            GameObject g;
+            var gms = new List<GameObject>(); GameObject g;
 
             while (g = HandleUtility.PickGameObject(ev.mousePosition, true, gms.ToArray()))
-            {
                 if (!gms.Contains(g))
                     gms.Add(g);
                 else
                     break;
-            }
 
-            if (gms.Count == 0)
-                return;
-            
+            if (gms.Count == 0) return;
+
             var names = Array.ConvertAll(gms.ToArray(), x => x.name);
 
-            EditorUtility.DisplayCustomMenu(HandleUtility.GUIPointToScreenPixelCoordinate(ev.mousePosition).ToRect(),
-                Array.ConvertAll(names, (x) => new GUIContent(x)), 0, (obj, list, idx) => Selection.activeGameObject = gms[idx], null);
+            EditorUtility.DisplayCustomMenu(ev.mousePosition.ToRect(), Array.ConvertAll(names, (x) => new GUIContent(x)),
+                gms.IndexOf(Selection.activeGameObject), (obj, list, idx) => Selection.activeGameObject = gms[idx], null);
         }
 
         /// <summary>
@@ -197,7 +193,7 @@ namespace Usink
             if (trans.Length != 1)
                 return;
 
-            ReflectionUtility.IStaticCall("IconSelector", "ShowAtPosition", 
+            ReflectionUtility.IStaticCall("IconSelector", "ShowAtPosition",
                 trans[0].gameObject, ev.mousePosition.ToRect(), true);
         }
     }
