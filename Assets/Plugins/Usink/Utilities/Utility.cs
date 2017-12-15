@@ -133,7 +133,7 @@ namespace Usink
         }
     }
 
-    static public class ExtensionUtility
+    static public class Utility
     {
         static public Rect ToRect(this Vector2 point)
         {
@@ -153,6 +153,23 @@ namespace Usink
         static public T FirstOrNull<T>(this T[] objs)
         {
             return objs.Length > 0 ? objs[0] : default(T);
+        }
+
+        static public int Repeat(int i, int max)
+        {
+            while (i < 0) i += max;
+            while (i >= max) i -= max;
+            return i;
+        }
+
+        static public void GUITint (Color text, Color bg, Action gui)
+        {
+            if (Event.current.type != EventType.Repaint) { gui(); return; }
+
+            Color t = GUI.contentColor, b = GUI.backgroundColor;
+            GUI.contentColor = text; GUI.backgroundColor = bg;
+            gui();
+            GUI.contentColor = t; GUI.backgroundColor = b;
         }
     }
 }

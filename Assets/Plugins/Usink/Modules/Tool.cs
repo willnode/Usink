@@ -1,0 +1,48 @@
+#pragma warning disable 162
+using UnityEngine;
+using UnityEditor;
+using Prefs = Usink.Config.View;
+
+namespace Usink
+{
+    public class Tool : Base
+    {
+        static View singleton;
+
+        [InitializeOnLoadMethod]
+        static void WarmUp()
+        {
+            Start<View>((x) => singleton = x);
+        }
+
+        protected override void OnEnable()
+        {
+            if (Prefs.Active)
+                RegisterOnSceneGUI(true);
+        }
+
+        protected override void OnDisable()
+        {
+            if (Prefs.Active)
+                RegisterOnSceneGUI(false);
+        }
+
+        protected override void OnSceneGUI(SceneView view)
+        {
+            var ev = Event.current;
+            if (ev.type == EventType.KeyDown)
+            {
+                
+            }
+        }
+
+        void Rotate(int axis, SceneView view, bool up)
+        {
+            var now = new SceneState(view);
+            var eul = now.rotation.eulerAngles;
+            eul[axis] = Mathf.Round(eul[axis] / 90f) * 90f + (up ? 90 : -90);
+            now.rotation = Quaternion.Euler(eul);
+            now.Apply(view);
+        }
+    }
+}

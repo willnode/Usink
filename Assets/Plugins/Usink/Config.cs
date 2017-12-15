@@ -26,6 +26,7 @@ namespace Usink
         {
             public const bool Active = true;
             public const bool Aggresive = false;
+            public const bool RightClickMenu = false;
             public const KeyCode Move = KeyCode.W;
             public const KeyCode Rotate = KeyCode.E;
             public const KeyCode Scale = KeyCode.R;

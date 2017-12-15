@@ -11,30 +11,15 @@ namespace Usink
     public abstract class Base : ScriptableObject
     {
 
-        protected virtual void OnSceneGUI(SceneView view)
-        {
+        protected virtual void OnSceneGUI(SceneView view) { }
 
-        }
+        protected virtual void OnSelectionChange() { }
 
-        protected virtual void OnSelectionChange()
-        {
+        protected virtual void OnHierarchyGUI(int id, Rect r) { }
 
-        }
+        protected virtual void OnEnable() { }
 
-        protected virtual void OnHierarchyGUI(int id, Rect r)
-        {
-
-        }
-
-        protected virtual void OnEnable ()
-        {
-
-        }
-
-        protected virtual void OnDisable ()
-        {
-            
-        }
+        protected virtual void OnDisable() { }
 
         protected void RegisterOnSceneGUI(bool reg)
         {
@@ -68,10 +53,10 @@ namespace Usink
                 var g = Resources.FindObjectsOfTypeAll<T>().FirstOrNull();
                 if (!g)
                 {
-                    g = ScriptableObject.CreateInstance<T>();
+                    g = CreateInstance<T>();
                     g.hideFlags = HideFlags.DontSave;
                 }
-                 delay(g);
+                delay(g);
             };
         }
     }
