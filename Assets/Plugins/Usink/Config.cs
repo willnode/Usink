@@ -16,9 +16,11 @@ namespace Usink
             public const KeyCode Down = KeyCode.Keypad2;
             public const KeyCode Left = KeyCode.Keypad4;
             public const KeyCode Right = KeyCode.Keypad6;
-            public const KeyCode Mode = KeyCode.Keypad5;
+            public const KeyCode TiltLeft = KeyCode.Keypad7;
+            public const KeyCode TiltRight = KeyCode.Keypad9;
             public const KeyCode In = KeyCode.KeypadPlus;
             public const KeyCode Out = KeyCode.KeypadMinus;
+            public const KeyCode Ortho = KeyCode.Keypad5;
             public const KeyCode Camera = KeyCode.Keypad0;
         }
 

@@ -157,9 +157,7 @@ namespace Usink
 
         static public int Repeat(int i, int max)
         {
-            while (i < 0) i += max;
-            while (i >= max) i -= max;
-            return i;
+            return (i % max + max) % max;
         }
         
         static public bool CloseEnough(float value, float target, float radius)

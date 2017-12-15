@@ -44,14 +44,19 @@ namespace Usink
                 else if (ev.type == EventType.MouseDown)
                     lastDown = ev.button == 1 ? ev.mousePosition : new Vector2();
             }
-            if (ev.type == EventType.KeyUp)
+            if (ev.type == EventType.KeyUp && ev.modifiers == EventModifiers.None)
             {
                 switch (ev.keyCode)
                 {
                     case KeyCode.F2: Extras.OpenRenameDialog(); break;
                     case KeyCode.L: Extras.OpenSelectLinkedDialog(); break;
                     case KeyCode.G: Extras.OpenObjectGizmoDialog(); break;
-                    case KeyCode.A: if (Selection.activeGameObject) { lastselect = Selection.instanceIDs; Selection.instanceIDs = new int[0]; } else Selection.instanceIDs = lastselect; break;
+                    case KeyCode.Comma: Extras.OpenLayerMaskDialog(); break;
+                    case KeyCode.Period: Extras.OpenLayoutDialog(); break;
+                    case KeyCode.A: SelectNone(); break;
+                    case KeyCode.S: Extras.OpenRemoveComponentDialog(); break;
+                    case KeyCode.O: Extras.OpenSceneDialog(); break;
+                    case KeyCode.D: Extras.OpenAddGameObjectDialog(); break;
                     case KeyCode.Space: AssetSearcherPopup.Show(ev.mousePosition); break;
                 }
             }
@@ -59,13 +64,14 @@ namespace Usink
 
         int[] lastselect = null;
 
-        void Rotate(int axis, SceneView view, bool up)
+        void SelectNone()
         {
-            var now = new SceneState(view);
-            var eul = now.rotation.eulerAngles;
-            eul[axis] = Mathf.Round(eul[axis] / 90f) * 90f + (up ? 90 : -90);
-            now.rotation = Quaternion.Euler(eul);
-            now.Apply(view);
+            if (Selection.activeGameObject)
+            {
+                lastselect = Selection.instanceIDs;
+                Selection.instanceIDs = new int[0];
+            }
+            else Selection.instanceIDs = lastselect;
         }
     }
 }

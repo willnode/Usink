@@ -20,7 +20,8 @@ namespace Usink
         public static void Show(Vector2 pos, string header, string input, bool emptyAcceptable, Action<string> OnAccepted)
         {
             if (!_singleton)
-                _singleton = ScriptableObject.CreateInstance<InputStringPopup>();
+                _singleton = CreateInstance<InputStringPopup>();
+
             _singleton.header = header;
             _singleton.input = input;
             _singleton.isFirstGUI = true;
@@ -37,7 +38,7 @@ namespace Usink
             GUILayout.Space(5f);
             Event current = Event.current;
             EditorGUILayout.LabelField(header, Header, GUILayout.Height(25));
-            bool flag = current.type == EventType.KeyDown && (current.keyCode == KeyCode.Return || current.keyCode == KeyCode.KeypadEnter);
+            bool flag = current.type == EventType.KeyDown && (current.keyCode == KeyCode.Return);
             GUI.SetNextControlName("m_PreferencesName");
             input = EditorGUILayout.TextField(input);
             if (isFirstGUI)
