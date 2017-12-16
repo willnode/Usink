@@ -165,6 +165,19 @@ namespace Usink
             return Mathf.Abs(value - target) < radius;
         }
 
+        static public bool GetFlag(this HideFlags en, HideFlags value) 
+        {
+            return  (en & value) == value;
+        }
+        
+        static public HideFlags SetFlag(this HideFlags en, HideFlags value, bool yes)
+        {
+            if (yes)
+                return en | value;
+            else
+                return en & ~value;
+        }
+
         static public void GUITint (Color text, Color bg, Action gui)
         {
             if (Event.current.type != EventType.Repaint) { gui(); return; }

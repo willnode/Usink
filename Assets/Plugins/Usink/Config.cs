@@ -27,34 +27,57 @@ namespace Usink
         public static class Tool
         {
             public const bool Active = true;
-            public const bool Aggresive = false;
-            public const KeyCode Move = KeyCode.W;
-            public const KeyCode Rotate = KeyCode.E;
-            public const KeyCode Scale = KeyCode.R;
-            //
-            public const bool RightClickSample = true;
+
+            //Q
+            //W
+            //E
+            //R
+            //T
+            //Y
+            //U
+            //I
+            public const KeyCode OpenScene = KeyCode.O;
+            public const KeyCode SelectParent = KeyCode.P;
+            public const KeyCode SelectPrev = KeyCode.LeftBracket;
+            public const KeyCode SelectNext = KeyCode.RightBracket;
+            //Backslash
+            public const KeyCode SelectNone = KeyCode.A;
+            public const KeyCode RemoveComp = KeyCode.S;
+            public const KeyCode AddObject = KeyCode.D;
+            //F
             public const KeyCode SetGizmo = KeyCode.G;
+            public const KeyCode SetActive = KeyCode.H;
+            public const KeyCode SetLock = KeyCode.J;
+            public const KeyCode SelectOperation = KeyCode.K;
+            public const KeyCode SelectLinked = KeyCode.L;
+            //Semicolon
+            //Quote
+            //Z
+            //X
+            //C
+            //V
+            //B
+            //N
+            //M
+            public const KeyCode OpenLayerMask = KeyCode.Comma;
+            public const KeyCode OpenLayout = KeyCode.Period;
+            //Slash
+
+            //Misc...
+            public const KeyCode OpenQuery = KeyCode.Space;
+            public const KeyCode OpenRename = KeyCode.F2;
+            public const KeyCode ClearConsole = KeyCode.None; //overrided by menuitem below
+            public const bool RightClickSample = true;
         }
 
-        public static class Mask
-        {
-            public const bool Active = true;
-            public const KeyCode SelectedOnly = KeyCode.KeypadEnter;
-        }
+        [MenuItem("Tools/Usink/Clear Dev Console _F9")]
+        public static void ClearDevConsole() { Extras.ClearDeveloperConsole(); }
 
         public static class Hint
         {
             public const bool Active = true;
         }
 
-        public static class Jump
-        {
-            public const bool Active = true;
-            public const KeyCode Show = KeyCode.Space;
-        }
-
-        [MenuItem("Edit/Usink/Open Scene %o")]
-        public static void DoOpenScene () { Extras.OpenSceneDialog(); }
-        
     }
+
 }

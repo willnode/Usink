@@ -27,7 +27,7 @@ namespace Usink
         }
         public static void ShowEnumeration(Vector2 pos, Vector2 size, int columnCount, string header, Type enumType, Action<int> action)
         {
-            ShowEnumeration(pos, size, columnCount, header, Array.ConvertAll(Enum.GetNames(enumType), x => new GUIContent(x)), action);
+            ShowEnumeration(pos, size, columnCount, header, Array.ConvertAll(Enum.GetNames(enumType), x => new GUIContent(ObjectNames.NicifyVariableName(x))), action);
         }
 
         public static void ShowEnumeration(Vector2 pos, Vector2 size, int columnCount, string header, string[] enums, Action<int> action)

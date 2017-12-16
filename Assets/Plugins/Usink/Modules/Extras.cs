@@ -87,6 +87,7 @@ namespace Usink
         static public void OpenSelectLinkedDialog()
         {
             var src = Selection.activeGameObject;
+            if (!src) return;
             EnumerationPopup.ShowEnumeration<LinkedTypes>(Event.current.mousePosition, "Select Linked", (x) =>
             {
                 var link = (LinkedTypes)x;
@@ -107,7 +108,6 @@ namespace Usink
                     return;
                 if (link == LinkedTypes.Material && !matObj)
                     return;
-
                 foreach (var g in gameObjects)
                     if (g.activeInHierarchy)
                         switch (link)
@@ -196,5 +196,62 @@ namespace Usink
             ReflectionUtility.IStaticCall("IconSelector", "ShowAtPosition",
                 trans[0].gameObject, ev.mousePosition.ToRect(), true);
         }
+
+        /// <summary>
+        /// Select operation (support bulk)
+        /// </summary>
+        static public void OpenSelectOperationDialog(bool additive)
+        {
+            var src = Selection.gameObjects;
+            if (src.Length == 0) return;
+            EnumerationPopup.ShowEnumeration<SelectOperation>(Event.current.mousePosition, "Select Operation" + (additive ? " Additively" : ""), (x) =>
+            {
+                var op = (SelectOperation)x;
+                var gameObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+                var dest = new List<GameObject>(16);
+
+                foreach (var g in gameObjects)
+                {
+                    var t = g.transform;
+                    if (g.activeInHierarchy)
+                        switch (op)
+                        {
+                            case SelectOperation.Parent:
+                                if (src.Any(y => t == y.transform.parent))
+                                    dest.Add(g);
+                                break;
+                            case SelectOperation.ParentsRecursive:
+                                if (src.Any(y => y.transform.IsChildOf(t)))
+                                    dest.Add(g);
+                                break;
+                            case SelectOperation.Childs:
+                                if (src.Any(y => y.transform == t.parent))
+                                    dest.Add(g);
+                                break;
+                            case SelectOperation.ChildsRecursive:
+                                if (src.Any(y => t.IsChildOf(y.transform)))
+                                    dest.Add(g);
+                                break;
+                            case SelectOperation.Sibling:
+                                if (src.Any(y => t.parent == y.transform.parent && y.transform != t))
+                                    dest.Add(g);
+                                break;
+                        }
+                }
+
+                Selection.objects = additive ? dest.Concat(src).Distinct().ToArray() : dest.ToArray();
+            });
+        }
+
+        enum SelectOperation { Parent, ParentsRecursive, Childs, ChildsRecursive, Sibling }
+
+        /// <summary>
+        /// Clear console logs
+        /// </summary>
+        static public void ClearDeveloperConsole()
+        {
+            ReflectionUtility.IStaticCall("LogEntries", "Clear");
+        }
+
     }
 }
