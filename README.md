@@ -10,7 +10,7 @@ Perhaps this is the most amazing thing you'd want to see. Right click a scene to
 
 ## Selection Query
 
-Hit <kbd>  Space  </kbd> at SceneView to open query dialog. Use this feature to quickly select matched query similar to search bar in hierarchy. Only this time, it's more powerful with query signs:
+Hit <kbd>Space</kbd> at SceneView to open query dialog. Use this feature to quickly select matched query similar to search bar in hierarchy. Only this time, it's more powerful with query signs:
 
 | Query Begin With | Means |
 |------------------|-------|
@@ -68,7 +68,7 @@ Classic operations made easy.
 
 Built-in unity shorcuts include: <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> <kbd>R</kbd> <kbd>T</kbd><kbd>Z</kbd> <kbd>X</kbd>  <kbd>F</kbd><kbd>2</kbd>.
 
-This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>Y</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>\</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>V</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>M</kbd> <kbd>/</kbd>
+This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>Y</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>&#92;</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>V</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>M</kbd> <kbd>/</kbd>
 
 ## Ideas and Contribute
 
@@ -84,5 +84,5 @@ Developed using Unity 2017.2.
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
