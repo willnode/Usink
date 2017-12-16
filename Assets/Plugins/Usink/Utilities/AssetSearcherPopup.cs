@@ -8,10 +8,9 @@ namespace Usink
 {
     public class AssetSearcherPopup : EditorWindow
     {
-        const int kMaxLists = 20;
+        static int kMaxLists = 16;
 
         static AssetSearcherPopup _singleton;
-
 
         static public void Show(Vector2 pos)
         {
@@ -24,21 +23,40 @@ namespace Usink
             _singleton.queryType = KeyTypes.SelectGameObject;
             _singleton.query = "";
             _singleton.ReloadResults("");
-            _singleton.ShowAsDropDown(GUIUtility.GUIToScreenPoint(pos).ToRect(),
-                new Vector2(300, 400));
+            _singleton.ShowAsDropDown(GUIUtility.GUIToScreenPoint(pos).ToRect(), new Vector2(300, 400));
         }
 
         string query = "";
         int focusedIdx = 0;
         bool isFirstGUI;
+
         KeyTypes queryType = KeyTypes.SelectGameObject;
-        List<string> res_str = new List<string>(32);
-        List<GUIContent> res_gui = new List<GUIContent>(32);
-        List<object> res_obj = new List<object>(32);
+
+        List<ID> res = new List<ID>(32);
+
+        public struct ID
+        {
+            public string name;
+            public GUIContent gui;
+            // could be instanceID or type
+            public object obj;
+        }
+
+        public struct TypeName
+        {
+            public Type type;
+            public string name;
+
+            public TypeName(Type type, string name) : this()
+            {
+                this.type = type;
+                this.name = name;
+            }
+        }
 
         void OnGUI()
         {
-            EditorGUILayout.LabelField(titles[(int)queryType + 1], Styles.Header, GUILayout.Height(25));
+            EditorGUILayout.LabelField(Styles.titles[(int)queryType], Styles.Header, GUILayout.Height(25));
             HandleKeyboard();
             HandleQuery();
             if (isFirstGUI && Event.current.type == EventType.Layout)
@@ -47,20 +65,21 @@ namespace Usink
                 isFirstGUI = false;
                 _singleton.Focus();
             }
-            if (res_obj.Count > 0)
+            if (res.Count > 0)
                 HandleResults();
             else
-                EditorGUILayout.HelpBox(Styles.KeysHint.text, MessageType.None);
+                EditorGUILayout.HelpBox(Styles.KeysHint, MessageType.None);
         }
+
         void HandleQuery()
         {
             EditorGUILayout.BeginHorizontal(GUILayout.Height(20));
-            EditorGUILayout.LabelField(keyGUIs[(int)queryType + 1], GUILayout.Width(20));
+            EditorGUILayout.LabelField(Styles.keyGUIs[(int)queryType], GUILayout.Width(20));
             var newQ = SearchField(query, GUILayout.ExpandWidth(true));
             if (newQ != query)
             {
                 query = newQ;
-                queryType = (KeyTypes)keys.IndexOf(query.Length > 0 ? query[0] : ' ');
+                queryType = (KeyTypes)Math.Max(0, Styles.keys.IndexOf(query.Length > 0 ? query[0] : ' '));
                 ReloadResults(queryType == KeyTypes.SelectGameObject ? query : query.Substring(1));
             }
             EditorGUILayout.EndHorizontal();
@@ -68,46 +87,107 @@ namespace Usink
 
         void ReloadResults(string query)
         {
-            res_str.Clear();
-            res_gui.Clear();
-            res_obj.Clear();
+            res.Clear();
             if (string.IsNullOrEmpty(query))
                 return;
+            var q2 = query.Replace(">", "t:");
             switch (queryType)
             {
-                case KeyTypes.SelectGameObject:
-                case KeyTypes.SelectAdditive:
-                case KeyTypes.SelectSubstractive:
-                    DoObjectSearch(query, HierarchyType.GameObjects);
-                    break;
-                case KeyTypes.SelectInChildren:
-                    DoObjectSearchInChild(Selection.transforms, query);
-                    break;
-                case KeyTypes.SelectAsset:
-                case KeyTypes.OpenAsset:
-                    DoObjectSearch(query, HierarchyType.Assets);
-                    break;
-                case KeyTypes.ExecuteWindow:
-                    DoWindowSearch(query);
-                    break;
+                case KeyTypes.SelectGameObject: DoObjectSearch(q2); break;
+                case KeyTypes.SelectAdditive: DoObjectAdditiveSearch(q2); break;
+                case KeyTypes.SelectSubstractive: DoObjectSubstractiveSearch(q2); break;
+                case KeyTypes.SelectHasTypes: DoComponentSearch(q2); break;
+                case KeyTypes.SelectInChildren: DoObjectSearchInChild(Selection.GetTransforms(SelectionMode.TopLevel), q2); break;
+                case KeyTypes.SelectAsset: DoAssetSearch(q2); break;
+                case KeyTypes.ExecuteWindow: DoWindowSearch(query); break;
             }
         }
 
-        void DoObjectSearch(string filter, HierarchyType type)
+        void DoObjectSearch(string filter)
         {
-            var props = new HierarchyProperty(type);
+            var props = new HierarchyProperty(HierarchyType.GameObjects);
             props.SetSearchFilter(filter, 0);
             props.Reset();
             while (props.Next(null))
             {
-                if (res_str.Count > kMaxLists)
-                    return;
-                res_str.Add(type == HierarchyType.GameObjects ? props.name : AssetDatabase.GUIDToAssetPath(props.guid));
-                res_gui.Add(new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)));
-                res_obj.Add(props.instanceID);
+                if (res.Count >= kMaxLists) return;
+                res.Add(new ID()
+                {
+                    name = props.name,
+                    gui = new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)),
+                    obj = props.instanceID
+                });
             }
         }
 
+        void DoObjectAdditiveSearch(string filter)
+        {
+            var props = new HierarchyProperty(HierarchyType.GameObjects);
+            props.SetSearchFilter(filter, 0);
+            props.Reset();
+            var sel = Selection.instanceIDs;
+            while (props.Next(null))
+            {
+                if (res.Count >= kMaxLists) return;
+                if (!sel.Contains(props.instanceID))
+                    res.Add(new ID()
+                    {
+                        name = props.name,
+                        gui = new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)),
+                        obj = props.instanceID
+                    });
+            }
+        }
+
+
+        void DoObjectSubstractiveSearch(string filter)
+        {
+            var sel = Selection.instanceIDs;
+            if (sel.Length == 0) return;
+            var props = new HierarchyProperty(HierarchyType.GameObjects);
+            props.SetSearchFilter(filter, 0);
+            props.Reset();
+            while (props.Next(null))
+            {
+                if (res.Count >= kMaxLists) return;
+
+                if (sel.Contains(props.instanceID))
+                    res.Add(new ID()
+                    {
+                        name = props.name,
+                        gui = new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)),
+                        obj = props.instanceID
+                    });
+            }
+        }
+
+        void DoComponentSearch(string filter)
+        {
+            InitTypeIndexing();
+
+            var types = components.Where((x) => StringContains(x.name, filter));
+
+            var props = new HierarchyProperty(HierarchyType.GameObjects);
+
+            foreach (var type in types)
+            {
+                props.SetSearchFilter("t:" + type.name, 0);
+                props.Reset();
+                while (props.Next(null))
+                {
+                    if (res.Count >= kMaxLists) return;
+
+                    if (!res.Any((x) => props.instanceID == (int)x.obj))
+                        res.Add(new ID()
+                        {
+                            name = props.name,
+                            gui = new GUIContent(props.name, AssetPreview.GetMiniThumbnail(
+                                (props.pptrValue as GameObject).GetComponent(type.type))),
+                            obj = props.instanceID
+                        });
+                }
+            }
+        }
 
         void DoObjectSearchInChild(Transform[] objects, string filter)
         {
@@ -116,64 +196,100 @@ namespace Usink
             props.Reset();
             while (props.Next(null))
             {
-                if (res_str.Count > kMaxLists)
+                if (res.Count >= kMaxLists)
                     return;
                 var obj = ((GameObject)EditorUtility.InstanceIDToObject(props.instanceID));
                 if (!obj || (objects.Length > 0 && !objects.Any(x => x && obj.transform.IsChildOf(x))))
                     continue;
-                res_str.Add(props.name);
-                res_gui.Add(new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)));
-                res_obj.Add(props.instanceID);
+                res.Add(new ID()
+                {
+                    name = props.name,
+                    gui = new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)),
+                    obj = props.instanceID
+                });
+            }
+        }
+
+        void DoAssetSearch(string filter)
+        {
+            var props = new HierarchyProperty(HierarchyType.Assets);
+            props.SetSearchFilter(filter, 0);
+            props.Reset();
+            while (props.Next(null))
+            {
+                if (res.Count >= kMaxLists)
+                    return;
+                res.Add(new ID()
+                {
+                    name = AssetDatabase.GUIDToAssetPath(props.guid),
+                    gui = new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)),
+                    obj = props.instanceID
+                });
             }
         }
 
         void DoWindowSearch(string filter)
         {
-            InitWindows();
-            for (int i = 0; i < editors.Count; i++)
+            InitTypeIndexing();
+            for (int i = 0; i < editorWindows.Count; i++)
             {
-                if (res_str.Count > kMaxLists)
+                if (res.Count >= kMaxLists)
                     return;
-                if (editors[i].Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
+
+                if (editorWindows[i].name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
                     continue;
-                res_str.Add(editors[i].Name);
-                res_gui.Add(new GUIContent(editors[i].Name));
-                res_obj.Add(editors[i]);
+
+                res.Add(new ID()
+                {
+                    name = editorWindows[i].name,
+                    gui = new GUIContent(editorWindows[i].name),
+                    obj = editorWindows[i].type
+                });
             }
         }
 
-        static public List<Type> editors;
-        static bool hasInitEditors = false;
+        static public List<TypeName> editorWindows = new List<TypeName>();
+        static public List<TypeName> components = new List<TypeName>();
+        static bool hasInitTypes = false;
 
-        public static void InitWindows()
+        public static void InitTypeIndexing()
         {
-            if (hasInitEditors)
-                return;
-            var typ = typeof(EditorWindow);
-            editors = typeof(EditorWindowWorker).Assembly.GetTypes().Where(t => typ.IsAssignableFrom(t)).ToList();
-            editors.AddRange(typeof(Editor).Assembly.GetTypes().Where(t => typ.IsAssignableFrom(t)));
-            hasInitEditors = true;
+            if (hasInitTypes) return;
+
+            var editorwindow = typeof(EditorWindow);
+            var component = typeof(Component);
+            foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var types = ass.GetTypes();
+                editorWindows.AddRange(types.Where(t => editorwindow.IsAssignableFrom(t)).Select(x => new TypeName(x, x.Name)));
+                components.AddRange(types.Where(t => component.IsAssignableFrom(t)).Select(x => new TypeName(x, x.Name)));
+            }
+            hasInitTypes = true;
         }
 
+        Vector2 scroll;
 
         void HandleResults()
         {
-            var count = Mathf.Min(kMaxLists, res_obj.Count);
+            var count = Mathf.Min(kMaxLists, res.Count);
+            scroll = EditorGUILayout.BeginScrollView(scroll);
             for (int i = 0; i < count; i++)
             {
                 if (focusedIdx == i)
                     GUI.backgroundColor = Color.cyan;
-                EditorGUILayout.BeginHorizontal(GUILayout.Height(20));
-                //GUI.DrawTexture(EditorGUILayout.GetControlRect(GUILayout.Width(20)), res_gui[i].image);
-                var rect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true));
-                EditorGUILayout.EndHorizontal();
-                if (GUI.Button(rect, res_gui[i], Styles.ListButton))
+
+                var rect = EditorGUILayout.GetControlRect(GUILayout.Height(20), GUILayout.ExpandWidth(true));
+
+                if (GUI.Button(rect, res[i].gui, Styles.ListButton))
                 {
                     Apply(i);
                 }
                 if (focusedIdx == i)
                     GUI.backgroundColor = Color.white;
             }
+            if (res.Count == kMaxLists)
+                GUILayout.Label("There may more results available", EditorStyles.centeredGreyMiniLabel);
+            EditorGUILayout.EndScrollView();
         }
 
         void HandleKeyboard()
@@ -195,20 +311,34 @@ namespace Usink
 
         void Apply(int queryIndex)
         {
-            if (queryIndex >= res_gui.Count)
+            if (queryIndex >= res.Count)
                 return;
             Close();
             UnityEngine.Object[] o = null;
-            if (queryType <= KeyTypes.OpenAsset)
+            if (queryType != KeyTypes.ExecuteWindow)
             {
-                o = queryIndex < 0 ? GetObjects() : new UnityEngine.Object[] { EditorUtility.InstanceIDToObject((int)res_obj[queryIndex]) };
+                // load objects
+                if (queryIndex < 0)
+                {
+                    if (query.Length == kMaxLists)
+                    {
+                        var oldk = kMaxLists;
+                        kMaxLists = int.MaxValue;
+                        ReloadResults(query); //full requery
+                        kMaxLists = oldk;
+                    }
+                    o = GetObjects();
+                }
+                else
+                    o = new UnityEngine.Object[] { EditorUtility.InstanceIDToObject((int)res[queryIndex].obj) };
             }
             switch (queryType)
             {
                 case KeyTypes.SelectGameObject:
                 case KeyTypes.SelectInChildren:
                 case KeyTypes.SelectAsset:
-                    if (queryIndex >= 0 && queryType >= KeyTypes.SelectAsset)
+                case KeyTypes.SelectHasTypes:
+                    if (queryIndex >= 0 && queryType == KeyTypes.SelectAsset)
                         EditorGUIUtility.PingObject(o[0]);
                     Selection.objects = o;
                     break;
@@ -222,97 +352,29 @@ namespace Usink
                     Selection.objects = x.ToArray();
                     break;
                 case KeyTypes.ExecuteWindow:
-                    // This time would be a type instead of instance ID
-                    var y = (Type)res_obj[Mathf.Max(0, queryIndex)];
-                    ((EditorWindow)EditorWindow.CreateInstance(y)).Show();
+                    // This time obj would be a type instead of instance ID
+                    // index -1 (launch all) is not acceptable here
+                    var y = (Type)res[Mathf.Max(0, queryIndex)].obj;
+                    ((EditorWindow)CreateInstance(y)).Show();
                     break;
             }
         }
 
         UnityEngine.Object[] GetObjects()
         {
-            var obj = new UnityEngine.Object[res_obj.Count];
-            for (int i = 0; i < res_obj.Count; i++)
+            var obj = new UnityEngine.Object[res.Count];
+            for (int i = 0; i < res.Count; i++)
             {
-                obj[i] = EditorUtility.InstanceIDToObject((int)res_obj[i]);
+                obj[i] = EditorUtility.InstanceIDToObject((int)res[i].obj);
             }
             return obj;
         }
-
-        /*
-        string query;
-        string header;
-        GUIContent[] itemGUIs;
-        string[] items;
-        List<int> queriedItems = new List<int>(kMaxLists);
-        Action<int> OnAccepted;
-        bool isFirstGUI = false;
-        Vector2 scroll;
-        int focusedIdx = 0;
-
-        void OnGUI ()
-        {
-            EditorGUILayout.LabelField(header, Styles.Header, GUILayout.Height(25));
-             HandleKeyboard();
-           query = SearchField(query);
-            if (isFirstGUI && Event.current.type == EventType.Layout) {
-                EditorGUI.FocusTextInControl("CommandSearch");
-                isFirstGUI = false;
-                scroll = Vector2.zero;
-                _singleton.Focus();
-            }
-            HandleQuery();
-            scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.ExpandHeight(true));
-            HandleItems();
-            EditorGUILayout.EndScrollView();
-        }
-
-        void HandleQuery () {
-            var ev = Event.current;
-            if (ev.type == EventType.KeyDown && ev.keyCode == KeyCode.Return)
-                return;
-            queriedItems.Clear();
-            bool isQueryEmpty = string.IsNullOrEmpty(query);
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (isQueryEmpty || StringContains(items[i], query)) {
-                    queriedItems.Add(i);
-                    if (queriedItems.Count >= kMaxLists)
-                        break;
-                }
-            }
-            focusedIdx = focusedIdx < 0 ? queriedItems.Count - 1 : 
-                (focusedIdx >= queriedItems.Count ? 0 : focusedIdx);
-        }
-        void HandleItems () {
-            var backColor = GUI.backgroundColor;
-            for (int i = 0; i < queriedItems.Count; i++)
-            {
-                if (focusedIdx == i)
-                    GUI.backgroundColor = Color.cyan;
-                if (GUILayout.Button(itemGUIs[queriedItems[i]], Styles.ListButton))
-                {
-                    Apply(i);
-                }
-                 if (focusedIdx == i)
-                    GUI.backgroundColor = backColor;           
-            }
-        }
-
-
-
-        void Apply (int queryIndex) {
-            if (queryIndex >= queriedItems.Count)
-                return;
-            Close();
-            OnAccepted(queriedItems[queryIndex]);
-        }*/
 
         static public string SearchField(string filterText, params GUILayoutOption[] options)
         {
             GUI.SetNextControlName("CommandSearch");
             GUILayout.Space(5);
-            Rect position = EditorGUILayout.GetControlRect(options);//GUILayoutUtility.GetRect(10f, 20f);
+            Rect position = EditorGUILayout.GetControlRect(options);
             position.x += 8f;
             position.width -= 31f;
 
@@ -340,11 +402,25 @@ namespace Usink
             public static GUIStyle SearchBox = new GUIStyle("SearchTextField");
             public static GUIStyle SearchCancelBut = new GUIStyle("SearchCancelButton");
             public static GUIStyle SearchCancelEmp = new GUIStyle("SearchCancelButtonEmpty");
-            public static GUIContent KeysHint = new GUIContent(
-                "\nType what you want to do\n" + "\n...\tSelect GameObjects" +
-                "\n+\tSelect Additively" + "\n-\tSubtact Selection" + "\n/\tSelect in Selected Children" +
-                "\n#\tOpen Asset" + "\n>\tSelect Asset" + "\n!\tOpen Editor Window"
-                + "\n\nShift+Enter to select all in the list");
+
+
+            public static readonly GUIContent[] keyGUIs = {
+                new GUIContent(" ", "Select Game Objects"),
+                new GUIContent("+", "Select Additively"),
+                new GUIContent("-", "Select Subtractively"),
+                new GUIContent("/", "Select in Childrens"),
+                new GUIContent(">", "Select Which Has Type"),
+                new GUIContent("#", "Select Assets"),
+                new GUIContent("!", "Launch Window"),
+            };
+
+            public static readonly GUIContent[] titles = Array.ConvertAll(keyGUIs, (x) => new GUIContent(x.tooltip));
+
+            public static readonly string keys = string.Join("", Array.ConvertAll(keyGUIs, (x) => x.text));
+
+            public static string KeysHintInfo = "\n\nWhen results available:\nEnter to select the first item\nShift+Enter to select all item\n";
+            public static string KeysHint = string.Join("\n", Array.ConvertAll(keyGUIs, (x) => x.text + "\t" + x.tooltip)) + KeysHintInfo;
+
             static Styles()
             {
                 ListButton.alignment = TextAnchor.MiddleLeft;
@@ -355,47 +431,16 @@ namespace Usink
             }
         }
 
-        const string keys = "+-/#>!?";
-
         public enum KeyTypes
         {
-            SelectGameObject = -1,
-            SelectAdditive = 0,
-            SelectSubstractive = 1,
-            SelectInChildren = 2,
-            OpenAsset = 3,
-            SelectAsset = 4,
-            ExecuteWindow = 5,
-            ExecuteHelp = 6
+            SelectGameObject,
+            SelectAdditive,
+            SelectSubstractive,
+            SelectInChildren,
+            SelectHasTypes,
+            SelectAsset,
+            ExecuteWindow,
         }
-
-        public static readonly GUIContent[] titles = {
-        new GUIContent("Select Game Object"),
-        new GUIContent("Select Additively"),
-        new GUIContent("Select Subtactively"),
-        new GUIContent("Select in Children"),
-        new GUIContent("Open Asset"),
-        new GUIContent("Select Asset"),
-        new GUIContent("Lauch Window"),
-        new GUIContent("Open Help Doc"),
-   };
-
-        public static readonly GUIContent[] keyGUIs = {
-        new GUIContent("..."),
-        new GUIContent("+"),
-        new GUIContent("-"),
-        new GUIContent("/"),
-        new GUIContent("#"),
-        new GUIContent(">"),
-        new GUIContent("!"),
-        new GUIContent("?"),
-   };
     }
 
-    public class EditorWindowWorker
-    {
-
-
-
-    }
 }

@@ -60,7 +60,7 @@ namespace Usink
         static public void OpenRemoveComponentDialog()
         {
             var TComponents = new HashSet<Type>();
-            var objects = Selection.gameObjects;
+            var objects = Selection.gameObjects.Clone() as GameObject[];
 
             foreach (var g in objects)
             {
