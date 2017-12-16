@@ -42,7 +42,7 @@ namespace Usink
             // 0 = Names consistent, 1 = Base Name consistent, 2 = All mixed
             int flag = names.All(x => x == names[0]) ? 0 :
                 (baseNames.All(x => x == baseNames[0]) ? 1 : 2);
-            InputStringPopup.Show(Event.current.mousePosition, "Rename",
+            InputStringPopup.Show(ev.mousePosition, "Rename",
                 flag == 0 ? names[0] : (flag == 1 ? baseNames[0] : ""), false, (x) =>
                 {
                     foreach (var g in Selection.gameObjects)
@@ -69,7 +69,7 @@ namespace Usink
 
             var TComps = TComponents.ToArray();
 
-            SearchablePopup.Show(Event.current.mousePosition, "Remove Component",
+            SearchablePopup.Show(ev.mousePosition, "Remove Component",
                 Array.ConvertAll(TComps, x => ObjectNames.NicifyVariableName(x.Name)), (x) =>
                 {
                     foreach (var g in objects)
@@ -88,7 +88,7 @@ namespace Usink
         {
             var src = Selection.activeGameObject;
             if (!src) return;
-            EnumerationPopup.ShowEnumeration<LinkedTypes>(Event.current.mousePosition, "Select Linked", (x) =>
+            EnumerationPopup.ShowEnumeration<LinkedTypes>(ev.mousePosition, "Select Linked", (x) =>
             {
                 var link = (LinkedTypes)x;
                 var gameObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
@@ -204,7 +204,7 @@ namespace Usink
         {
             var src = Selection.gameObjects;
             if (src.Length == 0) return;
-            EnumerationPopup.ShowEnumeration<SelectOperation>(Event.current.mousePosition, "Select Operation" + (additive ? " Additively" : ""), (x) =>
+            EnumerationPopup.ShowEnumeration<SelectOperation>(ev.mousePosition, "Select Operation" + (additive ? " Additively" : ""), (x) =>
             {
                 var op = (SelectOperation)x;
                 var gameObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();

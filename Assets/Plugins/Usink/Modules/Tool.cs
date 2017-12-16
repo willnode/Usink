@@ -45,7 +45,7 @@ namespace Usink
                 else if (ev.type == EventType.MouseDown && Prefs.RightClickSample)
                     lastDown = ev.button == 1 ? ev.mousePosition : new Vector2();
             }
-            if (ev.type == EventType.KeyUp && ev.modifiers == EventModifiers.None)
+            if (ev.type == EventType.KeyUp && modifierOK(ev.modifiers))
             {
                 switch (ev.keyCode)
                 {           
@@ -68,6 +68,11 @@ namespace Usink
                     case Prefs.ClearConsole: Extras.ClearDeveloperConsole(); break;
                 }
             }
+        }
+
+        bool modifierOK (EventModifiers m)
+        {
+            return m == EventModifiers.None || m == EventModifiers.FunctionKey || m == EventModifiers.Shift;
         }
 
         int[] lastselect = null;

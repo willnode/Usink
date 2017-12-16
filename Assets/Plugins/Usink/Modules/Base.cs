@@ -50,7 +50,7 @@ namespace Usink
         {
             EditorApplication.delayCall += delegate ()
             {
-                var g = Resources.FindObjectsOfTypeAll<T>().FirstOrNull();
+                var g = Resources.FindObjectsOfTypeAll<T>().FirstOrDefault();
                 if (!g)
                 {
                     g = CreateInstance<T>();

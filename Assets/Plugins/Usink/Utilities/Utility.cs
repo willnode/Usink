@@ -140,21 +140,18 @@ namespace Usink
             return new Rect(point, Vector2.zero);
         }
 
-        static public float ScalarMax(this Vector3 v)
+        static public Rect Multiply(this Matrix4x4 m, Rect r)
         {
-            return Mathf.Max(v.x, Mathf.Max(v.y, v.z));
+            var min = m.MultiplyPoint3x4(r.min);
+            var max = m.MultiplyPoint3x4(r.max);
+            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
         }
 
-        static public float ScalarMin(this Vector3 v)
+        static public float ScalarMax(this Vector2 v)
         {
-            return Mathf.Min(v.x, Mathf.Min(v.y, v.z));
+            return Mathf.Max(v.x, v.y);
         }
-
-        static public T FirstOrNull<T>(this T[] objs)
-        {
-            return objs.Length > 0 ? objs[0] : default(T);
-        }
-
+        
         static public int Repeat(int i, int max)
         {
             return (i % max + max) % max;

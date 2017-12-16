@@ -15,7 +15,7 @@ namespace Usink
 
         public SceneState(SceneView view)
         {
-            // to get the accurate result we need to do this
+            // to get the accurate (not the ongoing/current state) result we need to do it this way
             pivot = view.IGetField<AnimVector3>("m_Position").target;
             rotation = view.IGetField<AnimQuaternion>("m_Rotation").target;
             size = view.IGetField<AnimFloat>("m_Size").target;

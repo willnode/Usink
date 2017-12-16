@@ -16,7 +16,7 @@ namespace Usink
         {
             if (!_singleton)
             {
-                _singleton = Resources.FindObjectsOfTypeAll<AssetSearcherPopup>().FirstOrNull() ?? CreateInstance<AssetSearcherPopup>();
+                _singleton = Resources.FindObjectsOfTypeAll<AssetSearcherPopup>().FirstOrDefault() ?? CreateInstance<AssetSearcherPopup>();
             }
 
             _singleton.isFirstGUI = true;

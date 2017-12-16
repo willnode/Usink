@@ -21,7 +21,8 @@ namespace Usink
             public const KeyCode In = KeyCode.KeypadPlus;
             public const KeyCode Out = KeyCode.KeypadMinus;
             public const KeyCode Ortho = KeyCode.Keypad5;
-            public const KeyCode Camera = KeyCode.Keypad0;
+            public const KeyCode GoToCamera = KeyCode.Keypad0;
+            public const KeyCode GoToCanvas = KeyCode.KeypadPeriod;
         }
 
         public static class Tool

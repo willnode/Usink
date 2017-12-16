@@ -1,8 +1,6 @@
-
-
-
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,7 +14,7 @@ namespace Usink
 
         static public void Show(Vector2 pos, string header, string[] items, Action<int> onAccepted)
         {
-            _singleton = _singleton ?? Resources.FindObjectsOfTypeAll<SearchablePopup>().FirstOrNull() ??
+            _singleton = _singleton ?? Resources.FindObjectsOfTypeAll<SearchablePopup>().FirstOrDefault() ??
                 CreateInstance<SearchablePopup>();
 
             _singleton.query = null;
