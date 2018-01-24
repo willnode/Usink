@@ -1,12 +1,12 @@
 # Usink
 
-Usink is a Unity3D editor extension plugin to flood your keyboard with useful and handy keyboard shortcuts. You can use it for saving your time while building scenes in Unity.
+Usink is a Unity3D editor extension plugin to flood your keyboard (and mouse) with useful and handy keyboard shortcuts. You can use it for saving your time while building scenes in Unity.
 
 You can see the whole settings in [Config.cs](Assets/Editor/Plugins/Usink/Config.cs). Don't like my settings? Just fork the project and change that as much as you like!
 
 ## Right-Click Context
 
-Perhaps this is the most amazing thing you'd want to see. Right click a scene to open context menu where you can select objects even it's behind another object.
+Perhaps this is the most amazing thing you absolutely need. Right click a scene to open context menu where you can select objects even it's behind another object. [Demonstration](https://twitter.com/willnode/status/942026444221251584).
 
 ## Selection Query
 
@@ -22,27 +22,27 @@ Hit <kbd>Space</kbd> at SceneView to open query dialog. Use this feature to quic
 | `#` | Find Assets to get selected |
 | `!` | Launch an EditorWindow (Note that it lists ALL EditorWindow even it's hidden for your goodness sake) |
 
-> PS: Query shortcut are inspired from Blender while signs are inspired from VSCode :)
+> PS: Query shortcut are inspired from Blender while signs are from VS Code :)
 
 ## Scene View Navigation
 
-All scene navigation uses Numpad. Don't forget to turn on your <kbd>NumLk</kbd>.
+All scene navigation uses Numpad. Don't forget to turn on your <kbd>NumLk</kbd>:
 
-+ <kbd>2</kbd> Pitch-rotate the camera downward
++ <kbd>5</kbd> Pitch-rotate the camera downward
 + <kbd>8</kbd> Pitch-rotate the camera upward
 + <kbd>4</kbd> Yaw-rotate the camera leftward
 + <kbd>6</kbd> Yaw-rotate the camera rightward
 + <kbd>7</kbd> Roll-rotate the camera clockwise
 + <kbd>9</kbd> Roll-rotate the camera counter-clockwise
-+ <kbd>+</kbd> Zoom in the camera
-+ <kbd>-</kbd> Zoom out the camera
-+ <kbd>5</kbd> Change perspective/orthographic
++ <kbd>3</kbd> Zoom in the camera
++ <kbd>1</kbd> Zoom out the camera
++ <kbd>2</kbd> Change perspective/orthographic
 + <kbd>0</kbd> Align the camera to main camera
 + <kbd>.</kbd> Align the camera to UI canvas
 
 ## Selection
 
-Keyboard shortcut to handle selections,
+Keyboard shortcut to handle selections:
 
 + <kbd>P</kbd> Select parent
 + <kbd>A</kbd> Select none
@@ -51,7 +51,7 @@ Keyboard shortcut to handle selections,
 
 ## Operations
 
-Classic operations made easy.
+Classic operations made easy:
 
 + <kbd>S</kbd> Remove Component (will open dialog and also shows components that partially exist in selection)
 + <kbd>D</kbd> Add GameObject (similar as hierarchy dropdown)
@@ -66,9 +66,9 @@ Classic operations made easy.
 
 ## FWIW
 
-Built-in unity shorcuts include: <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> <kbd>R</kbd> <kbd>T</kbd><kbd>Z</kbd> <kbd>X</kbd>  <kbd>F</kbd><kbd>2</kbd>.
+Built-in unity shortcuts include: <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> <kbd>R</kbd> <kbd>T</kbd> <kbd>Y</kbd> <kbd>Z</kbd> <kbd>X</kbd>  <kbd>F</kbd> <kbd>V</kbd> <kbd>2</kbd>.
 
-This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>Y</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>&#92;</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>V</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>M</kbd> <kbd>/</kbd>
+This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>&#92;</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>M</kbd> <kbd>/</kbd>
 
 ## Ideas and Contribute
 
@@ -76,11 +76,11 @@ Have an idea to fill these empty shortcuts? Feel free to use Issues tab to sugge
 
 ## Versions
 
-Current version: `0.5` (Alpha)
+Current version: `0.6` (Alpha)
 
-This means things can change or break, and you can propose new ideas before being marked as `Final`
+This means things can change or break, and you can propose new ideas before being marked as `Final`.
 
-Developed using Unity 2017.2.
+Developed using Unity 5.6.
 
 ## License
 

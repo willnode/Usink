@@ -69,6 +69,8 @@ namespace Usink
 
             var TComps = TComponents.ToArray();
 
+            if (TComps.Length == 0) return;
+
             SearchablePopup.Show(ev.mousePosition, "Remove Component",
                 Array.ConvertAll(TComps, x => ObjectNames.NicifyVariableName(x.Name)), (x) =>
                 {

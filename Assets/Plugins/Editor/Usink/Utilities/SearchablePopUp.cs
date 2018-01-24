@@ -14,8 +14,8 @@ namespace Usink
 
         static public void Show(Vector2 pos, string header, string[] items, Action<int> onAccepted)
         {
-            _singleton = _singleton ?? Resources.FindObjectsOfTypeAll<SearchablePopup>().FirstOrDefault() ??
-                CreateInstance<SearchablePopup>();
+            if (!_singleton)
+                _singleton = Resources.FindObjectsOfTypeAll<SearchablePopup>().FirstOrDefault() ?? CreateInstance<SearchablePopup>();
 
             _singleton.query = null;
             _singleton.header = header;
@@ -24,7 +24,8 @@ namespace Usink
             _singleton.OnAccepted = onAccepted;
             _singleton.HandleQuery();
             _singleton.isFirstGUI = true;
-            _singleton.ShowAsDropDown(GUIUtility.GUIToScreenPoint(pos).ToRect(),
+            var rect = GUIUtility.GUIToScreenPoint(pos).ToRect();
+            _singleton.ShowAsDropDown(rect,
                 new Vector2(200, Mathf.Clamp(items.Length * 20 + 60, 50, 330)));
         }
 

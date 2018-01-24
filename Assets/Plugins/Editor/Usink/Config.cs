@@ -13,14 +13,14 @@ namespace Usink
         {
             public const bool Active = true;
             public const KeyCode Up = KeyCode.Keypad8;
-            public const KeyCode Down = KeyCode.Keypad2;
+            public const KeyCode Down = KeyCode.Keypad5;
             public const KeyCode Left = KeyCode.Keypad4;
             public const KeyCode Right = KeyCode.Keypad6;
             public const KeyCode TiltLeft = KeyCode.Keypad7;
             public const KeyCode TiltRight = KeyCode.Keypad9;
-            public const KeyCode In = KeyCode.KeypadPlus;
-            public const KeyCode Out = KeyCode.KeypadMinus;
-            public const KeyCode Ortho = KeyCode.Keypad5;
+            public const KeyCode In = KeyCode.Keypad3;
+            public const KeyCode Out = KeyCode.Keypad1;
+            public const KeyCode Ortho = KeyCode.Keypad2;
             public const KeyCode GoToCamera = KeyCode.Keypad0;
             public const KeyCode GoToCanvas = KeyCode.KeypadPeriod;
         }
