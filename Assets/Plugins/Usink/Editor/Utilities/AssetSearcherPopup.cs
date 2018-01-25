@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System;
+using UnityEditor.SceneManagement;
 
 namespace Usink
 {
@@ -99,6 +100,7 @@ namespace Usink
                 case KeyTypes.SelectHasTypes: DoComponentSearch(q2); break;
                 case KeyTypes.SelectInChildren: DoObjectSearchInChild(Selection.GetTransforms(SelectionMode.TopLevel), q2); break;
                 case KeyTypes.SelectAsset: DoAssetSearch(q2); break;
+                case KeyTypes.OpenScene: DoSceneSearch(query); break;
                 case KeyTypes.ExecuteWindow: DoWindowSearch(query); break;
             }
         }
@@ -228,6 +230,23 @@ namespace Usink
             }
         }
 
+        void DoSceneSearch(string filter)
+        {
+            var props = new HierarchyProperty(HierarchyType.Assets);
+            props.SetSearchFilter(filter + " t:Scene", 0);
+            props.Reset();
+            while (props.Next(null))
+            {
+                if (res.Count >= kMaxLists)
+                    return;
+                res.Add(new ID()
+                {
+                    name = AssetDatabase.GUIDToAssetPath(props.guid),
+                    gui = new GUIContent(props.name, AssetPreview.GetMiniThumbnail(props.pptrValue)),
+                    obj = props.instanceID
+                });
+            }
+        }
         void DoWindowSearch(string filter)
         {
             InitTypeIndexing();
@@ -315,7 +334,7 @@ namespace Usink
                 return;
             Close();
             UnityEngine.Object[] o = null;
-            if (queryType != KeyTypes.ExecuteWindow)
+            if (queryType < KeyTypes.OpenScene)
             {
                 // load objects
                 if (queryIndex < 0)
@@ -350,6 +369,11 @@ namespace Usink
                     var x = new HashSet<UnityEngine.Object>(Selection.objects);
                     x.ExceptWith(o);
                     Selection.objects = x.ToArray();
+                    break;
+                case KeyTypes.OpenScene:
+                    // Shift here means add the first result additively
+                    var z = res[Mathf.Max(0, queryIndex)];
+                    EditorSceneManager.OpenScene(z.name, queryIndex == -1 ? OpenSceneMode.Additive : OpenSceneMode.Single);
                     break;
                 case KeyTypes.ExecuteWindow:
                     // This time obj would be a type instead of instance ID
@@ -411,6 +435,7 @@ namespace Usink
                 new GUIContent("/", "Select in Childrens"),
                 new GUIContent(">", "Select Which Has Type"),
                 new GUIContent("#", "Select Assets"),
+                new GUIContent("@", "Open a Scene"),
                 new GUIContent("!", "Launch Window"),
             };
 
@@ -439,6 +464,7 @@ namespace Usink
             SelectInChildren,
             SelectHasTypes,
             SelectAsset,
+            OpenScene,
             ExecuteWindow,
         }
     }

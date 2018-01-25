@@ -49,13 +49,12 @@ namespace Usink
             {
                 switch (ev.keyCode)
                 {           
-                    case Prefs.OpenScene: Extras.OpenSceneDialog(); break;
-                    case Prefs.SelectParent: SelectParent(); break;                  
+                    case Prefs.SelectParent: var ts = Selection.GetTransforms(SelectionMode.ExcludePrefab); if (ts.Length > 1) { Extras.MakeParent(Selection.activeTransform = Selection.activeTransform, ts); } else SelectParent(); break;                  
                     case Prefs.SelectPrev: SelectPrev(); break;
                     case Prefs.SelectNext: SelectNext(); break;
                     case Prefs.SelectNone: SelectNone(); break;
                     case Prefs.RemoveComp: Extras.OpenRemoveComponentDialog(); break;
-                    case Prefs.AddObject: Extras.OpenAddGameObjectDialog(); break;
+                    case Prefs.AddObject: if (ev.shift) SelectParent(); Extras.OpenAddGameObjectDialog(); break;
                     case Prefs.SetGizmo: Extras.OpenObjectGizmoDialog(); break;
                     case Prefs.SetActive: ToggleActive(); break;
                     case Prefs.SetLock: ToggleLock(); break;
@@ -89,7 +88,7 @@ namespace Usink
 
         void SelectParent ()
         {
-            var ts = Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.ExcludePrefab);
+            var ts = Selection.GetTransforms(SelectionMode.ExcludePrefab);
             var dest = new List<Transform>();
             foreach (var t in ts)
             {
@@ -98,6 +97,7 @@ namespace Usink
             }
             Selection.instanceIDs = dest.ConvertAll(x => x.gameObject.GetInstanceID()).ToArray();
         }
+
         void SelectPrev()
         {
 
@@ -106,6 +106,7 @@ namespace Usink
         {
             
         }
+
         void ToggleActive()
         {
             foreach (var g in Selection.gameObjects)

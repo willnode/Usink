@@ -15,22 +15,6 @@ namespace Usink
         static Event ev { get { return Event.current; } }
 
         /// <summary>
-        /// Open dialog to quickly open scene in project
-        /// </summary>
-        static public void OpenSceneDialog()
-        {
-            var paths = Array.ConvertAll(AssetDatabase.FindAssets("t:Scene"), x => AssetDatabase.GUIDToAssetPath(x));
-
-            var namePaths = Array.ConvertAll(paths, x => Path.GetFileNameWithoutExtension(x));
-
-            var mode = ev.shift ? OpenSceneMode.Additive : OpenSceneMode.Single;
-
-            SearchablePopup.Show(ev.mousePosition, "Open Scene" + (ev.shift ? " (Additive)" : "")
-                , namePaths, (x) => EditorSceneManager.OpenScene(paths[x], mode));
-
-        }
-
-        /// <summary>
         /// Open dialog to quickly rename object (support bulk rename)
         /// </summary>
         static public void OpenRenameDialog()
@@ -50,6 +34,15 @@ namespace Usink
                         g.name = flag == 1 ? x + (kBaseName.Match(g.name)) : x;
                     }
                 });
+        }
+
+        static public void MakeParent(Transform parent, Transform[] objects)
+        {
+            foreach (var item in objects)
+            {
+                if (item != parent)
+                    Undo.SetTransformParent(item, parent, "Set Parent");
+            }
         }
 
         static readonly Regex kBaseName = new Regex("([ ]?[(]\\d+[)])");
@@ -155,7 +148,7 @@ namespace Usink
             // hieararchy window is mandatory :(
             var hierarchy = ReflectionUtility.IStaticCall("SceneHierarchyWindow", "get_lastInteractedHierarchyWindow");
             if (hierarchy == null)
-                return;
+                hierarchy = OpenHierarchy();
             GUIUtility.hotControl = 0;
             GenericMenu genericMenu = new GenericMenu();
             if (Selection.activeGameObject == null)
@@ -163,6 +156,11 @@ namespace Usink
             else
                 hierarchy.ICall("CreateGameObjectContextClick", genericMenu, 0);
             genericMenu.DropDown(ev.mousePosition.ToRect());
+        }
+
+        static object OpenHierarchy()
+        {
+          return  EditorWindow.GetWindow(ReflectionUtility.GetTypeFromUT("SceneHierarchyWindow"), false, null, false);
         }
 
         /// <summary>

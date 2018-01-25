@@ -69,6 +69,7 @@ namespace Usink
             public const KeyCode OpenRename = KeyCode.F2;
             public const KeyCode ClearConsole = KeyCode.None; //overrided by menuitem below
             public const bool RightClickSample = true;
+            public const bool DeleteThenReselect = true;
         }
 
         [MenuItem("Tools/Usink/Clear Dev Console _F9")]

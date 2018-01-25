@@ -1,6 +1,8 @@
 # Usink
 
-Usink is a Unity3D editor extension plugin to flood your keyboard (and mouse) with useful and handy keyboard shortcuts. You can use it for saving your time while building scenes in Unity.
+**[Download via Asset Store](http://u3d.as/DrG)**
+
+Usink is a Unity3D editor extension plugin to flood your keyboard (and mouse) with useful opinionated keyboard shortcuts. You can use it for saving your time while building scenes in Unity.
 
 You can see the whole settings in [Config.cs](Assets/Editor/Plugins/Usink/Config.cs). Don't like my settings? Just fork the project and change that as much as you like!
 
@@ -20,6 +22,7 @@ Hit <kbd>Space</kbd> at SceneView to open query dialog. Use this feature to quic
 | `/` | Select Objects if it a children of already selected objects |
 | `>` | Find Objects by component name (Similar with `t:` but can do partial search) |
 | `#` | Find Assets to get selected |
+| `@` | Find and open a Scene inside project (Shift to add additively) | 
 | `!` | Launch an EditorWindow (Note that it lists ALL EditorWindow even it's hidden for your goodness sake) |
 
 > PS: Query shortcut are inspired from Blender while signs are from VS Code :)
@@ -44,7 +47,7 @@ All scene navigation uses Numpad. Don't forget to turn on your <kbd>NumLk</kbd>:
 
 Keyboard shortcut to handle selections:
 
-+ <kbd>P</kbd> Select parent
++ <kbd>P</kbd> Select or Make parent
 + <kbd>A</kbd> Select none
 + <kbd>L</kbd> Select based on similarities (eg. name/prefab/mesh)
 + <kbd>K</kbd> More select operation (eg. by parent/child/sibling)
@@ -57,10 +60,9 @@ Classic operations made easy:
 + <kbd>D</kbd> Add GameObject (similar as hierarchy dropdown)
 + <kbd>G</kbd> Set Object Gizmo (applies to active object only)
 + <kbd>H</kbd> Toggle Object Active Status
-+ <kbd>J</kbd> Toggle Object Lock Status (HideFlag's `NotEditable`)
++ <kbd>J</kbd> Toggle Object Lock Status (HideFlags `NotEditable`)
 + <kbd>,</kbd> Open Layer Mask (right from SceneView)
 + <kbd>.</kbd> Open Layout Selection (right from SceneView)
-+ <kbd>O</kbd> Open Scene Files that exist in the Project
 + <kbd>F2</kbd> Rename GameObject right inside SceneView
 + <kbd>F9</kbd> Clear Developer Console
 
@@ -68,7 +70,7 @@ Classic operations made easy:
 
 Built-in unity shortcuts include: <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> <kbd>R</kbd> <kbd>T</kbd> <kbd>Y</kbd> <kbd>Z</kbd> <kbd>X</kbd>  <kbd>F</kbd> <kbd>V</kbd> <kbd>2</kbd>.
 
-This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>&#92;</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>M</kbd> <kbd>/</kbd>
+This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>O</kbd> <kbd>&#92;</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>M</kbd> <kbd>/</kbd>
 
 ## Ideas and Contribute
 
@@ -76,11 +78,11 @@ Have an idea to fill these empty shortcuts? Feel free to use Issues tab to sugge
 
 ## Versions
 
-Current version: `0.6` (Alpha)
+Current version: `0.6.1` (Alpha)
 
 This means things can change or break, and you can propose new ideas before being marked as `Final`.
 
-Developed using Unity 5.6.
+Developed using Unity 5.6.0
 
 ## License
 
