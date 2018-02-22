@@ -59,7 +59,7 @@ namespace Usink
             //V
             //B
             //N
-            //M
+            public const KeyCode GoSeparateLayer = KeyCode.M;
             public const KeyCode OpenLayerMask = KeyCode.Comma;
             public const KeyCode OpenLayout = KeyCode.Period;
             //Slash

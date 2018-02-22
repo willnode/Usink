@@ -89,8 +89,8 @@ namespace Usink
         void ReloadResults(string query)
         {
             res.Clear();
-            if (string.IsNullOrEmpty(query))
-                return;
+            if (string.IsNullOrEmpty(query) && queryType != KeyTypes.OpenScene)
+                return; // except scenes, don't perform the query if empty
             var q2 = query.Replace(">", "t:");
             switch (queryType)
             {

@@ -95,8 +95,9 @@ namespace Usink
                 var srcrend = src.GetComponent<MeshRenderer>();
                 var meshObj = srcfilt ? srcfilt.sharedMesh : null;
                 var matObj = srcrend ? srcrend.sharedMaterial : null;
-                var snapY = EditorPrefs.GetFloat("MoveSnapY", 1f);
-
+                var snapIdx = link == LinkedTypes.Level ? EditorUtility.DisplayDialogComplex("Select similar position level", "On which axis?", "X", "Y", "Z") : 0;
+                var snapRange = EditorPrefs.GetFloat("MoveSnap" + (snapIdx == 0 ? "X" : (snapIdx == 1 ? "Y" : "Z")), 0.1f);
+            
                 if (link == LinkedTypes.Prefab && !srcprfb)
                     return;
                 if (link == LinkedTypes.Mesh && !meshObj)
@@ -114,7 +115,7 @@ namespace Usink
                             case LinkedTypes.Mesh: if ((srcfilt = g.GetComponent<MeshFilter>()) && srcfilt.sharedMesh == meshObj) dest.Add(g); break;
                             case LinkedTypes.Material: if ((srcrend = g.GetComponent<MeshRenderer>()) && srcrend.sharedMaterial == matObj) dest.Add(g); break;
                             case LinkedTypes.Sibling: if (g.transform.parent == srctrs.parent) dest.Add(g); break;
-                            case LinkedTypes.Level: if (Utility.CloseEnough(g.transform.position.y, srctrs.position.y, snapY)) dest.Add(g); break;
+                            case LinkedTypes.Level: if (Utility.CloseEnough(g.transform.position[snapIdx], srctrs.position[snapIdx], snapRange)) dest.Add(g); break;
                         }
 
                 Selection.objects = dest.ToArray();

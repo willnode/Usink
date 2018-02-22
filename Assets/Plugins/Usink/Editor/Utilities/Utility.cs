@@ -151,22 +151,22 @@ namespace Usink
         {
             return Mathf.Max(v.x, v.y);
         }
-        
+
         static public int Repeat(int i, int max)
         {
             return (i % max + max) % max;
         }
-        
+
         static public bool CloseEnough(float value, float target, float radius)
         {
-            return Mathf.Abs(value - target) < radius;
+            return Mathf.Abs(value - target) + 1e-4f < radius;
         }
 
-        static public bool GetFlag(this HideFlags en, HideFlags value) 
+        static public bool GetFlag(this HideFlags en, HideFlags value)
         {
-            return  (en & value) == value;
+            return (en & value) == value;
         }
-        
+
         static public HideFlags SetFlag(this HideFlags en, HideFlags value, bool yes)
         {
             if (yes)
@@ -175,7 +175,7 @@ namespace Usink
                 return en & ~value;
         }
 
-        static public void GUITint (Color text, Color bg, Action gui)
+        static public void GUITint(Color text, Color bg, Action gui)
         {
             if (Event.current.type != EventType.Repaint) { gui(); return; }
 
@@ -183,6 +183,24 @@ namespace Usink
             GUI.contentColor = text; GUI.backgroundColor = bg;
             gui();
             GUI.contentColor = t; GUI.backgroundColor = b;
+        }
+
+        static public bool IsPrefab(GameObject g)
+        {
+            var r = PrefabUtility.GetPrefabType(g);
+            return r == PrefabType.ModelPrefab || r == PrefabType.Prefab;
+        }
+
+        static public Transform[] GetRootSiblings()
+        {
+            var results = new List<Transform>();
+            var gameObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+            foreach (var g in gameObjects)
+            {
+                if (!IsPrefab(g) && g.transform && g.transform.parent == null)
+                    results.Add(g.transform);
+            }
+            return results.OrderBy(t => t.GetSiblingIndex()).ToArray();
         }
     }
 }
