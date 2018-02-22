@@ -77,7 +77,7 @@ namespace Usink
                     case Prefs.SetGizmo: Extras.OpenObjectGizmoDialog(); break;
                     case Prefs.SetActive: ToggleActive(); break;
                     case Prefs.SetLock: ToggleLock(); break;
-                    case Prefs.SelectOperation: Extras.OpenSelectOperationDialog(ev.shift); break;
+                    case Prefs.SelectOperation: Extras.OpenSelectOperationDialog(!ev.shift); break;
                     case Prefs.SelectLinked: Extras.OpenSelectLinkedDialog(); break;
                     case Prefs.GoSeparateLayer: ToggleSeparateLayer(); break;
                     case Prefs.OpenLayerMask: Extras.OpenLayerMaskDialog(); break;

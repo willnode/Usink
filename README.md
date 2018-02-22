@@ -1,6 +1,6 @@
 # Usink
 
-**U**nity extension for **S**cenev**i**ew **N**avigation and **K**eybinding.
+**U**nity extension for **S**cenev**I**ew **N**avigation and **K**eybinding.
 
 ---
 
@@ -45,7 +45,6 @@ Additional navigation controls, also uses Numpad:
 + <kbd>3</kbd> Zoom in the camera
 + <kbd>1</kbd> Zoom out the camera
 + <kbd>2</kbd> Change perspective/orthographic
-
 + <kbd>0</kbd> Align scene camera to main camera
 + <kbd>.</kbd> Align scene camera to (in front of) UI canvas
 
@@ -94,7 +93,7 @@ Additional handy selection utilities:
 
 Built-in unity shortcuts include: <kbd>Q</kbd> <kbd>W</kbd> <kbd>E</kbd> <kbd>R</kbd> <kbd>T</kbd> <kbd>Y</kbd> <kbd>Z</kbd> <kbd>X</kbd>  <kbd>F</kbd> <kbd>V</kbd> <kbd>2</kbd>.
 
-This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>O</kbd> <kbd>&#92;</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>M</kbd> <kbd>/</kbd>
+This means these keys are still unused: <kbd>1</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd> <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd> <kbd>-</kbd> <kbd>=</kbd> <kbd>~</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>O</kbd> <kbd>&#92;</kbd> <kbd>;</kbd> <kbd>'</kbd> <kbd>C</kbd> <kbd>B</kbd> <kbd>N</kbd> <kbd>/</kbd>
 
 ## Ideas and Contribute
 
