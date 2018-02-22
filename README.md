@@ -1,10 +1,14 @@
 # Usink
 
+**U**nity extension for **S**cenev**i**ew **N**avigation and **K**eybinding.
+
+---
+
 **[Download via Asset Store](http://u3d.as/DrG)**
 
-Usink is a Unity3D editor extension plugin to flood your keyboard (and mouse) with useful opinionated keyboard shortcuts. You can use it for saving your time while building scenes in Unity.
+Usink is a Unity editor extension to fill the editor with useful opinionated keyboard shortcuts. You can use it for saving your time while building scenes in Unity.
 
-You can see the whole settings in [Config.cs](Assets/Editor/Plugins/Usink/Config.cs). Don't like my settings? Just fork the project and change that as much as you like!
+You can see the whole settings in [Config.cs](Assets/Editor/Plugins/Usink/Config.cs). Don't like my settings? Just fork the project and change it as much as you like!
 
 ## Right-Click Context
 
@@ -22,14 +26,12 @@ Hit <kbd>Space</kbd> at SceneView to open query dialog. Use this feature to quic
 | `/` | Select Objects if it a children of already selected objects |
 | `>` | Find Objects by component name (Similar with `t:` but can do partial search) |
 | `#` | Find Assets to get selected |
-| `@` | Find and open a Scene inside project (Shift to add additively) | 
+| `@` | Find and open a Scene inside project (Shift to open additively) |
 | `!` | Launch an EditorWindow (Note that it lists ALL EditorWindow even it's hidden for your goodness sake) |
-
-> PS: Query shortcut are inspired from Blender while signs are from VS Code :)
 
 ## Scene View Navigation
 
-All scene navigation uses Numpad. Don't forget to turn on your <kbd>NumLk</kbd>:
+All scene navigation uses Numpad. Don't forget to turn on your <kbd>NumLk</kbd>.
 
 + <kbd>5</kbd> Pitch-rotate the camera downward
 + <kbd>8</kbd> Pitch-rotate the camera upward
@@ -37,33 +39,55 @@ All scene navigation uses Numpad. Don't forget to turn on your <kbd>NumLk</kbd>:
 + <kbd>6</kbd> Yaw-rotate the camera rightward
 + <kbd>7</kbd> Roll-rotate the camera clockwise
 + <kbd>9</kbd> Roll-rotate the camera counter-clockwise
+
+Additional navigation controls, also uses Numpad:
+
 + <kbd>3</kbd> Zoom in the camera
 + <kbd>1</kbd> Zoom out the camera
 + <kbd>2</kbd> Change perspective/orthographic
-+ <kbd>0</kbd> Align the camera to main camera
-+ <kbd>.</kbd> Align the camera to UI canvas
+
++ <kbd>0</kbd> Align scene camera to main camera
++ <kbd>.</kbd> Align scene camera to (in front of) UI canvas
 
 ## Selection
 
 Keyboard shortcut to handle selections:
 
-+ <kbd>P</kbd> Select or Make parent
-+ <kbd>A</kbd> Select none
-+ <kbd>L</kbd> Select based on similarities (eg. name/prefab/mesh)
-+ <kbd>K</kbd> More select operation (eg. by parent/child/sibling)
++ <kbd>A</kbd> Select none (then reselect back)
++ <kbd>P</kbd> Select parent
++ <kbd>[</kbd> Select previous sibling
++ <kbd>]</kbd> Select next sibling
 
-## Operations
+If multiple objects are selected, those keys are overrided with:
 
-Classic operations made easy:
++ <kbd>P</kbd> Set active object as parent of selected objects
++ <kbd>[</kbd> Reorder selected objects to close with earliest selected object index.
++ <kbd>]</kbd> Reorder selected objects to close with latest selected object index.
+
+Additional handy selection utilities:
+
++ <kbd>L</kbd> Select other scene object based on similarities (eg. name/prefab/layer/mesh/position)
++ <kbd>K</kbd> More select operation by hierarchy (eg. by parent/child/sibling/recursively)
+
+## Scene Filter
+
++ <kbd>M</kbd> Hide unselected objects temporarily*
+
+> \* This is a new feature and does not work with UI objects yet. It works by modifying the layer of selected objects to hidden one so you need to press 'M' again when finished, otherwise the modification no longer can be recovered back. For your safety, destructive operations like saving or closing scene will trigger this reversion automatically.
+
+## GameObject Operation
 
 + <kbd>S</kbd> Remove Component (will open dialog and also shows components that partially exist in selection)
 + <kbd>D</kbd> Add GameObject (similar as hierarchy dropdown)
 + <kbd>G</kbd> Set Object Gizmo (applies to active object only)
 + <kbd>H</kbd> Toggle Object Active Status
 + <kbd>J</kbd> Toggle Object Lock Status (HideFlags `NotEditable`)
++ <kbd>F2</kbd> Rename GameObject right inside SceneView
+
+## Miscellaneous
+
 + <kbd>,</kbd> Open Layer Mask (right from SceneView)
 + <kbd>.</kbd> Open Layout Selection (right from SceneView)
-+ <kbd>F2</kbd> Rename GameObject right inside SceneView
 + <kbd>F9</kbd> Clear Developer Console
 
 ## FWIW
@@ -78,13 +102,12 @@ Have an idea to fill these empty shortcuts? Feel free to use Issues tab to sugge
 
 ## Versions
 
-Current version: `0.6.1` (Alpha)
+Current version: `0.7.0` (Alpha)
 
 This means things can change or break, and you can propose new ideas before being marked as `Final`.
 
-Developed using Unity 5.6.0
+Developed using Unity 5.6.0.
 
 ## License
 
 [MIT](LICENSE)
-
